@@ -5,7 +5,8 @@ import cors from 'cors';
 import pino from 'pino-http';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
+import cookieParser from 'cookie-parser';
 
 const PORT = env(ENV_VARS, 3000);
 
@@ -19,8 +20,8 @@ export const setupServer = () => {
     }),
   );
 
+  app.use(cookieParser());
   app.use(cors());
-
   app.use(
     pino({
       transport: {
@@ -35,7 +36,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use(contactsRouter);
+  app.use(router);
 
   app.use('*', notFoundHandler);
   app.use(errorHandler);
